@@ -3,6 +3,50 @@
  *  The main object for Run-anywhere.
  *
  *  This is the module that gets required.
+ *
+ *  At its heart, run-anywhere are the adapters between your code that
+ *  is written in the `RA style`, and the various places it could be run.
+ *
+ *  The `RA style` is simple, and is taken from the AWS Lamba style. Your function
+ *  is top-level, and takes arguments as its `argv` param, takes a `context` param,
+ *  which has information about the context of the call (not information for the semantics
+ *  of the function), and the ever-present Node.js `callback`.
+ *
+ *          foo = function(argv, context, callback) ...
+ *
+ *  On the other side (the system that 'hosts' your function), things are more complex.
+ *  RA has to adapt to all of the styles out there. The initial goal is:
+ *
+ *  1.  CLI
+ *  2.  Inside the typical Node.js network app.
+ *  3.  Inside an Express app.
+ *  4.  Inside AWS Lambda.
+ *  5.  As part of a `routes` based app.
+ *  6.  Inside CLI-helpers like Vorpal.
+ *  --- Longer-term
+ *  7.  Inside things like Electron/Atom/Node-Webkit, etc.
+ *  8.  React-Native, ParseServer-CloudCode
+ *
+ *  And then, RA makes the two layers work together, in such a way that you spend your
+ *  time improving your app, instead of worrying about how to get your code to run in
+ *  the popular service today.
+ *
+ *  -------- <aside>
+ *  RA is not trying to make your code run inside any/all of these containers -- that is
+ *  impossible. The idea is that your function always works in a CLI context, where you
+ *  get a huge benefit that your code is very automated-test friendly. Then, as long as
+ *  you do not try to break things, it should also work without any effort in the container
+ *  that it is destined for. And you can feel more confident that if you have to run
+ *  your code in another container, it will *integrate* auto-magically.
+ *  -------- </aside>
+ *
+ *  So, there are three contexts that you need to be aware of:
+ *
+ *  1.  Your function. You just use the RA function signature and calling-convention.
+ *      And you have to have some small boilerplate at the top of each of your functions.
+ *  2.  The container. RA has all the code to deal with the container.
+ *  3.  Calling your own RA-styled code.
+ *
  */
 
 var sg            = require('sgsg');
