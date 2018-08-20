@@ -60,7 +60,7 @@ exports.invoke = function(params_, spec_, fn, callback) {
  *  Add meta-info to the function.
  */
 libRa.exportFunction = libRa.raify = function(name, fn_, options_) {
-  var options   = options || {};
+  var options   = options_ || {};
   var fn        = fn_;
 
   fn.ra = {
@@ -453,6 +453,8 @@ libRa.ErrorHandler = function(argv, context, callback) {
 libRa.errorHandler = function(argv, context, callback) {
   return new libRa.ErrorHandler(argv, context, callback);
 };
+
+libRa.v2 = sg.deepExtend({...libRa, ...require('./lib/ra2')});
 
 // Export the libRa object.
 _.each(libRa, function(value, key) {

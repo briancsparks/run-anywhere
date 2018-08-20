@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/briancsparks/run-anywhere#readme",
   "dependencies": {
+    "deep-extend": "^0.6.0",
     "difflet": "^1.0.1",
     "mongo": "^0.1.0",
     "redis": "^2.8.0",
