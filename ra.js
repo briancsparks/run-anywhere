@@ -8,6 +8,7 @@
 var sg                        = require('sgsg');
 var _                         = sg._;
 var fs                        = sg.fs;
+const deepExtend              = sg.deepExtend;
 var path                      = require('path');
 var urlLib                    = require('url');
 const difflet                 = require('difflet');

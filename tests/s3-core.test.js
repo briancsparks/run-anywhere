@@ -34,7 +34,7 @@ const {
 }                               = raUtils.async;
 const s3params                  = require('../lib/aws/s3').s3params;
 const {
-  getObject,
+  getObject
 }                               = s3params;
 
 test('s3params no async data', async t => {

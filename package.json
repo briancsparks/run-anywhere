@@ -22,10 +22,12 @@
   },
   "homepage": "https://github.com/briancsparks/run-anywhere#readme",
   "dependencies": {
+    "app-module-path": "^2.2.0",
     "aws-sdk": "^2.296.0",
     "deep-extend": "^0.6.0",
     "difflet": "^1.0.1",
     "mongo": "^0.1.0",
+    "quick-merge": "^1.0.1",
     "redis": "^2.8.0",
     "sgsg": "^0.9.14"
   },
