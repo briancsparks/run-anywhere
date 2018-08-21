@@ -7,7 +7,9 @@
     "ra": "bin.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava",
+    "watch": "ava --watch",
+    "coverage": "nyc ava"
   },
   "repository": {
     "type": "git",
@@ -20,10 +22,14 @@
   },
   "homepage": "https://github.com/briancsparks/run-anywhere#readme",
   "dependencies": {
+    "aws-sdk": "^2.296.0",
     "deep-extend": "^0.6.0",
     "difflet": "^1.0.1",
     "mongo": "^0.1.0",
     "redis": "^2.8.0",
     "sgsg": "^0.9.14"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0"
   }
 }

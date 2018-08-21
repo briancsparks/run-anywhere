@@ -454,6 +454,7 @@ libRa.errorHandler = function(argv, context, callback) {
   return new libRa.ErrorHandler(argv, context, callback);
 };
 
+libRa.sg = sg;
 libRa.v2 = sg.deepExtend({...libRa, ...require('./lib/ra2')});
 
 // Export the libRa object.
