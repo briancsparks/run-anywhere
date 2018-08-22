@@ -32,15 +32,16 @@ const raUtils                   = require('../lib/utils');
 const {
   asyncFn
 }                               = raUtils.async;
+const s3schema                  = require('../lib/aws/schemas/s3');
 const s3params                  = require('../lib/aws/s3').s3params;
 const {
   getObject
-}                               = s3params;
+}                               = s3schema.params;
 
 test('s3params no async data', async t => {
   const params = await getObject({Bucket: 'a'});
 
-  t.deepEqual(params, {ok:false, Bucket: 'a'});
+  t.deepEqual(params, {fail:{Bucket: 'a'}});
 });
 
 
@@ -49,7 +50,7 @@ test('s3params async data', async t => {
 
   const config = {Bucket};
   const params = await getObject(config);
-  t.deepEqual(params, {ok:false, Bucket: 'a'});
+  t.deepEqual(params, {fail:{Bucket: 'a'}});
 });
 
 test('s3params async data multiple', async t => {
@@ -59,7 +60,7 @@ test('s3params async data multiple', async t => {
 
   const config = {Bucket, IfMatch, Key};
   const params = await getObject(config);
-  t.deepEqual(params, {ok:true, Bucket: 'a', IfMatch: 'abcdefg', Key: 'a/b/ddd'});
+  t.deepEqual(params, {ok:{Bucket: 'a', IfMatch: 'abcdefg', Key: 'a/b/ddd'}});
 });
 
 test('s3params mixed data multiple', async t => {
@@ -69,7 +70,7 @@ test('s3params mixed data multiple', async t => {
 
   const config = {Bucket, IfMatch, Key};
   const params = await getObject(config);
-  t.deepEqual(params, {ok:true, Bucket: 'a', IfMatch: 'abcdefg', Key: 'a/b/ddd'});
+  t.deepEqual(params, {ok:{Bucket: 'a', IfMatch: 'abcdefg', Key: 'a/b/ddd'}});
 });
 
 test('s3params mixed sync and unsync', async t => {
@@ -79,7 +80,7 @@ test('s3params mixed sync and unsync', async t => {
 
   const config = {Bucket, IfMatch, Key};
   const params = await getObject(config);
-  t.deepEqual(params, {ok:true, Bucket: 'a', IfMatch: 'abcdefg', Key: 'a/b/ddd'});
+  t.deepEqual(params, {ok:{Bucket: 'a', IfMatch: 'abcdefg', Key: 'a/b/ddd'}});
 });
 
 function mkSync(kf) {
