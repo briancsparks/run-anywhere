@@ -1,0 +1,104 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  lambda-carbon
+
+  A project lambda app to test the flexibility of lambda and SAM
+
+
+Globals:
+  Function:
+    Timeout: 8
+    MemorySize: 384
+
+
+# ------------------------------------------------------------
+
+# This is the minimum that SAM is happy with.
+Resources:
+
+    SharkFunction:
+      Type: AWS::Serverless::Function
+      Properties:
+        Handler: central.kitchensink
+        Runtime: nodejs8.10
+# ------------------------------------------------------------
+
+        CodeUri: src/
+        Role:    arn:aws:iam::084075158741:role/netlab-server-executor
+        VpcConfig:
+          SecurityGroupIds:
+            - sg-4b9ff335
+            - sg-539cf02d
+          SubnetIds:
+            - subnet-c0cf7088
+            - subnet-5bb24a01
+            - subnet-045f9c28
+            - subnet-04386838
+
+        # API (gateway) -----------------------------------------
+        Events:
+          HelloWorld:
+            Type: Api
+            Properties:
+                Path: /hello
+                Method: get
+
+        # DynamoDB Stream processor ----------------------------
+        # Events:
+          Stream:
+            Type: DynamoDB
+            Properties:
+              Stream:             !GetAtt StatsTable.StreamArn
+              BatchSize:          100
+              StartingPosition:   TRIM_HORIZON
+
+    # If you want to process DynamoDB stream events, you must have AWSLambdaDynamoDBExecutionRole
+    # on the Lambda function.
+    StatsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType:       HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
+
+Outputs:
+
+    HelloWorldApi:
+      Description: "API Gateway endpoint URL for Dev stage for Hello World function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/hello/"
+
+    HelloWorldFunction:
+      Description: "Hello World Lambda Function ARN"
+      Value: !GetAtt SharkFunction.Arn
+
+    HelloWorldFunctionIamRole:
+      Description: "Implicit IAM Role created for Hello World function"
+      Value: !GetAtt SharkFunction.Arn
+
+
+
+
+
+    # Good to know how to do this, but we will use a real table
+    # SharkTable:
+    #   Type: AWS::Serverless::SimpleTable
+    #   Properties:
+    #     PrimaryKey:
+    #       Name: id
+    #       Type: String
+    #     ProvisionedThroughput:
+    #       ReadCapacityUnits: 1
+    #       WriteCapacityUnits: 1
+
+
+
+

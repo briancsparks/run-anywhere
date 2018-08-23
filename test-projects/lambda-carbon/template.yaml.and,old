@@ -30,7 +30,7 @@ Resources:
                 - subnet-5bb24a01
                 - subnet-045f9c28
                 - subnet-04386838
-              Events:
+            Events:
               HelloWorld:
                 Type: Api # More info about API Event Source:
                 Properties:

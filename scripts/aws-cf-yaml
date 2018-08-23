@@ -1,0 +1,129 @@
+#!/usr/bin/env node
+
+
+var sg   = require('sgsg');
+var fs   = require('fs');
+var path = require('path');
+var util = require('util');
+var yaml = require('js-yaml');
+
+var ARGV          = sg.ARGV();
+
+function GetAtter(longName) {
+  this.klass      = 'GetAtter';
+
+  var   parts     = longName.split('.');
+  this.name       = parts.shift();
+  this.attrName   = parts.join('.');
+}
+
+function GetAtterOk(data) {
+  const parts = data.split('.');
+  if (parts.length < 2)     { return false; }
+
+  return {
+    name:       parts.shift(),
+    attrName:   parts.join('.')
+  }
+}
+
+const GetAttrYamlType = new yaml.Type('!GetAtt', {
+  kind: 'scalar',
+
+  // Must return true if we can handle this data
+  resolve: function(data) {
+    //console.log(`getatt-resolve`, data);
+    return GetAtterOk(data);
+  },
+
+  construct: function(data) {
+    //console.log(`getatt-construct`, data);
+    // return new Something()
+    return new GetAtter(data);
+  },
+
+  instanceOf: GetAtter,
+
+  represent: function(atter) {
+    return `${atter.name}::${atter.attrName}`;
+  }
+});
+
+function Suber(str) {
+  this.klass      = 'Suber';
+
+  const attrs = SuberOk(str);
+  const keys  = Object.keys(attrs);
+  const len   = keys.length;
+
+  for (var i = 0; i < len; ++i) {
+    const key = keys[i];
+    this[key] = attrs[key];
+  }
+}
+
+function SuberOk(str) {
+  const match = str.match(/([$][{]([^}]+)[}])/);
+  //console.log({str, match});
+  if (!match)     { return false; }
+
+  return {
+    string:     str,
+    vars:       [match[2]]
+  }
+}
+
+const SubYamlType = new yaml.Type('!Sub', {
+  kind: 'scalar',
+
+  // Must return true if we can handle this data
+  resolve: function(data) {
+    return SuberOk(data);
+  },
+
+  construct: function(data) {
+    return new Suber(data);
+  },
+
+  instanceOf: Suber,
+
+  represent: function(suber) {
+    return `${suber.string}`;
+  }
+});
+
+const SAM_SCHEMA  = yaml.Schema.create([GetAttrYamlType, SubYamlType]);
+
+if (require.main === module) {
+
+  const filename = ARGV.filename || ARGV.file || ARGV.args.shift();
+  if (!fs.existsSync(filename)) {
+    console.log(`Cannot find ${filename}`);
+    return 2;
+  }
+
+  // And read a document using that schema.
+  const fullfilename = path.join(process.cwd(), filename);
+  fs.readFile(fullfilename, 'utf8', function (err, data) {
+    if (err)      { console.log(`Failed to open ${filename}:`, err); return 2; };
+
+    var loaded, dumped;
+
+    if (err) {
+      console.error(err.stack || err.message || String(err));
+    }
+
+    loaded = yaml.load(data, { schema: SAM_SCHEMA });
+    console.log(util.inspect(loaded, false, 20, true));
+  });
+}
+
+// There are some exports to play with this example interactively.
+
+module.exports.GetAtter         = GetAtter;
+module.exports.Suber            = Suber;
+module.exports.GetAttrYamlType  = GetAttrYamlType;
+module.exports.SubYamlType      = SubYamlType;
+module.exports.SAM_SCHEMA       = SAM_SCHEMA;
+
+

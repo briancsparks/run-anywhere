@@ -3,7 +3,7 @@ const _                       = require('underscore');
 
 var lib = {};
 
-var   logAll  = false;
+var   logAll  = process.env.FULL_LOGGING || false;
 var   logger  = console.error;
 
 
@@ -18,7 +18,6 @@ const halfLog = lib.halfLog = lib.log = function(message, ...newStuff /*, [oldSt
 };
 
 lib.logStart = function(event, context, outerCallback, callback) {
-  logAll = false;
   halfLog('[3]:utils.logStart--begin', {outerCallback}, {event, context, callback});
 
   const startTime = new Date();
