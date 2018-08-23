@@ -31,7 +31,8 @@ var main = function() {
   }
 
   /* otherwise -- unknown command */
-  console.error("Unknown command, known commands: ", _.keys(commands));
+  const bin2 = require('./lib/ra2');
+  bin2(ARGV);
 };
 
 commands['invoke-script'] = commands.invokeScript = commands.invokescript = function() {

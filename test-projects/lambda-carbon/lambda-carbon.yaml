@@ -17,7 +17,7 @@ Globals:
 # This is the minimum that SAM is happy with.
 Resources:
 
-    SharkFunction:
+    LambdaCarbonFunction:
       Type: AWS::Serverless::Function
       Properties:
         Handler: central.kitchensink
@@ -38,7 +38,7 @@ Resources:
 
         # API (gateway) -----------------------------------------
         Events:
-          HelloWorld:
+          LambdaCarbon:
             Type: Api
             Properties:
                 Path: /hello
@@ -72,24 +72,24 @@ Resources:
 
 Outputs:
 
-    HelloWorldApi:
+    LambdaCarbonApi:
       Description: "API Gateway endpoint URL for Dev stage for Hello World function"
       Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/hello/"
 
-    HelloWorldFunction:
+    LambdaCarbonFunction:
       Description: "Hello World Lambda Function ARN"
-      Value: !GetAtt SharkFunction.Arn
+      Value: !GetAtt LambdaCarbonFunction.Arn
 
-    HelloWorldFunctionIamRole:
+    LambdaCarbonFunctionIamRole:
       Description: "Implicit IAM Role created for Hello World function"
-      Value: !GetAtt SharkFunction.Arn
+      Value: !GetAtt LambdaCarbonFunction.Arn
 
 
 
 
 
     # Good to know how to do this, but we will use a real table
-    # SharkTable:
+    # LambdaCarbonTable:
     #   Type: AWS::Serverless::SimpleTable
     #   Properties:
     #     PrimaryKey:
