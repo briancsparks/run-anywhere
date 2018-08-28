@@ -10,7 +10,7 @@
 var sg                = require('sgsg');
 var _                 = sg._;
 var path              = require('path');
-var ra                = require('./ra');
+var ra                = require('../ra');
 
 var fs                = sg.fs;
 
@@ -31,7 +31,7 @@ var main = function() {
   }
 
   /* otherwise -- unknown command */
-  const bin2 = require('./lib/ra2');
+  const bin2 = require('../lib/ra2');
   bin2(ARGV);
 };
 
