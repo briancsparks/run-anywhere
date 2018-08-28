@@ -8,7 +8,7 @@ const _                       = sg._;
 const argvGet                 = sg.argvGet;
 const argvExtract             = sg.argvExtract;
 
-var lib = {};
+var lib = {}
 
 lib.args = function(argv, context, callback) {
   const verbose = argvGet(argv, 'verbose,v');

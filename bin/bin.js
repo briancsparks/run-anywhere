@@ -31,8 +31,15 @@ var main = function() {
   }
 
   /* otherwise -- unknown command */
-  const bin2 = require('../lib/ra2');
-  bin2(ARGV);
+  const commandLib  = require(`../lib/commands/${command}`);
+
+  command = commandLib.main;
+  if (command && (typeof command === 'function')) {
+    command(ARGV);
+    return;
+  }
+
+  console.error(`Error in ra ${command}.main not function`);
 };
 
 commands['invoke-script'] = commands.invokeScript = commands.invokescript = function() {
@@ -230,7 +237,7 @@ commands.ls = function() {
   });
 };
 
-if (process.argv[1] === __filename || process.argv[1].match(/bin.ra$/)) {
+if (process.argv[1] === __filename || process.argv[1].match(/bin.bin.js$/)) {
   return main();
 }
 
