@@ -53,11 +53,11 @@ commands['invoke-script'] = commands.invokeScript = commands.invokescript = func
     return;
   }
 
-  var name = path.join(process.env.HOME, 'dev', moduleName);
+  var name = path.join(require('os').homedir(), 'dev', moduleName);
   if (fs.test('-d', name))  { moduleDirname = name; }
 
   if (!moduleDirname) {
-    name = path.join(process.env.HOME, 'dev', 'b', moduleName);
+    name = path.join(require('os').homedir(), 'dev', 'b', moduleName);
     if (fs.test('-d', name))  { moduleDirname = name; }
   }
 
